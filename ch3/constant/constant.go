@@ -117,4 +117,5 @@ func main() {
 		fmt.Printf("%v %T\n", c, c)
 		// intはサイズが決まらないので注意
 	}
+
 }
