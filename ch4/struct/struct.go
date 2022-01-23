@@ -101,6 +101,65 @@ func main() {
 		hits := make(map[address]int)
 		hits[address{"golang.orc", 443}]++
 	}
+
+	{
+		type Circle struct {
+			X, Y, Radius int
+		}
+		type Wheel struct {
+			X, Y, Radius, Spokes int
+		}
+		var w Wheel
+		w.X = 8
+		w.Y = 8
+		w.Radius = 5
+		w.Spokes = 20
+	}
+
+	// 共通部分をくくりだすほうが便利になるがアクセスが面倒
+	{
+		type Point struct {
+			X, Y int
+		}
+		type Circle struct {
+			Center Point
+			Radius int
+		}
+		type Wheel struct {
+			Circle Circle
+			Spokes int
+		}
+		var w Wheel
+		w.Circle.Center.X = 8
+		w.Circle.Center.Y = 8
+		w.Circle.Radius = 5
+		w.Spokes = 20
+	}
+	// 構造体埋め込み (struct embedding) による 無名フィールド (anonymous field)
+	{
+		type Point struct {
+			X, Y int
+		}
+		type Circle struct {
+			Point  // 無名フィールド
+			Radius int
+		}
+		type Wheel struct {
+			Circle // 無名フィールド
+			Spokes int
+		}
+		// 無名フィールドの埋め込みによって、中間の名前を書くことなく参照できる
+		// 無名フィールドとは言ってるが、名前を持っているので中間の名前を書いてアクセスも可能
+		var w Wheel
+		w.X = 8      // w.Circle.Point.X = 8 と同じ
+		w.Y = 8      // w.Circle.Point.Y = 8 と同じ
+		w.Radius = 5 // w.Circle.Radius = 5 と同じ
+		w.Spokes = 20
+		// ただし、構造体リテラルではちゃんと構造体も宣言しないとだめ
+		//w = Wheel{8, 8, 5, 20} // コンパイルエラー: 不明フィールド
+		//w = Wheel{X: 8,Y: 8, Radius: 5, Spokes: 20} // コンパイルエラー: 不明フィールド
+		w = Wheel{Circle{Point{X: 8, Y: 8}, 5}, 20}
+	}
 }
 
 func Bonus(e *Employee, percent int) int {
