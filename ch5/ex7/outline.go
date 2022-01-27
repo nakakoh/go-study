@@ -51,7 +51,7 @@ func startElement(n *html.Node) {
 	case html.ElementNode:
 		var sb strings.Builder
 		for _, attr := range n.Attr {
-			fmt.Fprintf(&sb, " %s=%s", attr.Key, attr.Val)
+			sb.WriteString(fmt.Sprintf(" %s=\"%s\"", attr.Key, attr.Val))
 		}
 		if n.FirstChild == nil {
 			fmt.Printf("%*s<%s%s />\n", depth*2, "", n.Data, sb.String())
@@ -60,14 +60,14 @@ func startElement(n *html.Node) {
 			depth++
 		}
 	case html.TextNode:
-		fmt.Printf("%*s%s\n", depth*2, "", n.Data)
+		fmt.Printf("%*s%s\n", depth*2, "", strings.TrimSpace(n.Data))
 	case html.CommentNode:
 		fmt.Printf("%*s<!-- %s -->\n", depth*2, "", n.Data)
 	}
 }
 
 func endElement(n *html.Node) {
-	if n.Type == html.ElementNode {
+	if n.Type == html.ElementNode && n.FirstChild != nil {
 		depth--
 		fmt.Printf("%*s</%s>\n", depth*2, "", n.Data)
 	}

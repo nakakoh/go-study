@@ -92,6 +92,11 @@ func main() {
 		fmt.Println(strings.Map(add1, "VMS"))      // WNT
 		fmt.Println(strings.Map(add1, "Admix"))    // Benjy
 	}
+
+	// 無名関数
+	{
+		strings.Map(func(r rune) rune { return r + 1 }, "HAL-9000")
+	}
 }
 
 func hypot(x, y float64) float64 {
