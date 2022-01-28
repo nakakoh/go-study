@@ -97,6 +97,25 @@ func main() {
 	{
 		strings.Map(func(r rune) rune { return r + 1 }, "HAL-9000")
 	}
+
+	// 可変個引数関数
+	// 可変個引数関数の型は普通のスライスとは明確に異なる
+	{
+		var f = func(...int) {}
+		var g = func([]int) {}
+		fmt.Printf("%T\n", f) // func(...int)
+		fmt.Printf("%T\n", g) // func([]int)
+
+		// 文字列のフォーマット関数で良く使われている
+		var errorf = func(linenum int, format string, args ...interface{}) {
+			fmt.Fprintf(os.Stderr, "Line %d: ", linenum)
+			fmt.Fprintf(os.Stderr, format, args...)
+			fmt.Fprintln(os.Stderr)
+		}
+		linenum, name := 12, "count"
+		errorf(linenum, "undefined: %s", name) // Line 12: undefined: count
+	}
+
 }
 
 func hypot(x, y float64) float64 {
