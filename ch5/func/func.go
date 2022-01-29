@@ -116,6 +116,46 @@ func main() {
 		errorf(linenum, "undefined: %s", name) // Line 12: undefined: count
 	}
 
+	// 遅延関数呼び出し
+	// defer で関数宣言することで、関数完了後に実施する処理を定義できる
+	{
+		var double = func(x int) (result int) {
+			defer func() { fmt.Printf("double(%d) = %d\n", x, result) }()
+			return x + x
+		}
+		_ = double(4) // 8
+
+		// 呼び出し元に返す値を変えることもできる
+		var triple = func(x int) (result int) {
+			defer func() { result += x }()
+			return double(x)
+		}
+		fmt.Println(triple(4)) // 12
+	}
+
+	// パニック
+	// 発生すると、そのゴルーチン内の全ての遅延関数の呼び出しを行い、プログラムはログメッセージを表示してCrashする
+	// 通常はerror値を使って適切にエラー処理されるべき
+	{
+		panic("panic!")
+
+		// regexp.MustCompileという関数は以下のような実装になっている
+		// これはパッケージレベルの変数を初期化するのを便利にする
+		// (なんか関数を実行する前に初期化すべきもののエラー検知的なもの？)
+		/*
+			package regexp
+			func Compile(expr string) (*Regexp, error) { /* ... *\/ }
+			func MustCompile(expr string) * Regexp {
+				re, err := Compile(expr)
+				if err != nil {
+					panic(err)
+				}
+				return re
+			}
+		*/
+		//var httpSchemeRE = regexp.MustCompile(`^https?:`) // "http:" or "https:"
+
+	}
 }
 
 func hypot(x, y float64) float64 {
