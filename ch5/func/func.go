@@ -154,9 +154,23 @@ func main() {
 			}
 		*/
 		//var httpSchemeRE = regexp.MustCompile(`^https?:`) // "http:" or "https:"
-
 	}
+
 }
+
+// カプセル化(encapsulated) // 情報隠蔽(information hiding)
+// Goは名前の可視性を制御する仕組みは大文字で始まるかどうかだけで決まる
+// 構造体では単一のフィールドしか無くても、以下のように小文字で定義すれば隠せる
+type IntSet struct {
+	words []uint64
+}
+
+// 構造体のフィールドは隠して、実装だけを提供することで互換性を保ちやすくなる
+type Counter struct{ n int }
+
+func (c *Counter) N() int     { return c.n }
+func (c *Counter) Increment() { c.n++ }
+func (c *Counter) Reset()     { c.n = 0 }
 
 func hypot(x, y float64) float64 {
 	return math.Sqrt(x*x + y*y)
