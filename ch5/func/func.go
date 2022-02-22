@@ -172,6 +172,17 @@ func (c *Counter) N() int     { return c.n }
 func (c *Counter) Increment() { c.n++ }
 func (c *Counter) Reset()     { c.n = 0 }
 
+// ゲッター(getter) セッター(setter)
+type Logger struct {
+	flags  int
+	prefix string
+}
+
+func (l *Logger) Flags() int
+func (l *Logger) SetFlags(flags int)
+func (l *Logger) Prefix() string
+func (l *Logger) SetPrefix(prefix string)
+
 func hypot(x, y float64) float64 {
 	return math.Sqrt(x*x + y*y)
 }
