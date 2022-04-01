@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// sha256 の ハッシュ値 から Base62[A-Za-z0-9] の文字列を生成する
+// uuid から Base62[A-Za-z0-9] の文字列を生成する
 func main() {
 	//str := time.Now().String()
 	//b := getSha256(str)
