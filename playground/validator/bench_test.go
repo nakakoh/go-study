@@ -18,8 +18,8 @@ Benchmark_AlphanumMin6Max16-8                                    2197718        
 Benchmark_AlphanumericMin6Max16ContainsAnyNumAndAlphabet-8       1967143               622.3 ns/op            16 B/op          1 allocs/op
 Benchmark_Regex-8                                                4750104               274.6 ns/op             0 B/op          0 allocs/op
 Benchmark_CompareRune-8                                         35721045                39.79 ns/op            0 B/op          0 allocs/op
-Benchmark_CustomRegexValidator-8                                 1511078               736.1 ns/op            16 B/op          1 allocs/op
-Benchmark_CustomRuneValidator-8                                  2066582               600.0 ns/op            16 B/op          1 allocs/op
+Benchmark_CustomRegexValidator-8                                 1657042               776.1 ns/op            16 B/op          1 allocs/op
+Benchmark_CustomRuneValidator-8                                  2115559               576.5 ns/op            16 B/op          1 allocs/op
 */
 
 // 英数字チェック
@@ -100,7 +100,7 @@ func Benchmark_CompareRune(b *testing.B) {
 }
 
 // 正規表現によるカスタムバリデーターによる英数字と文字数、英数混合必須チェック
-// わかりやすいが、遅い。alloc も多め
+// 事前コンパイルしておけば、そんなに遅くなり
 func Benchmark_CustomRegexValidator(b *testing.B) {
 	validate := validator.New()
 	validate.RegisterValidation("include_alphabet", includeAlphabet)
@@ -141,8 +141,7 @@ func Benchmark_CustomRuneValidator(b *testing.B) {
 }
 
 func includeAlphabetRune(fl validator.FieldLevel) bool {
-	str := fl.Field().String()
-	for _, c := range str {
+	for _, c := range fl.Field().String() {
 		if (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') {
 			return true
 		}
@@ -151,8 +150,7 @@ func includeAlphabetRune(fl validator.FieldLevel) bool {
 }
 
 func includeNumberRune(fl validator.FieldLevel) bool {
-	str := fl.Field().String()
-	for _, c := range str {
+	for _, c := range fl.Field().String() {
 		if c >= '0' && c <= '9' {
 			return true
 		}
